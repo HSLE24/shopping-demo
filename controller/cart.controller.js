@@ -47,7 +47,9 @@ cartController.getCart = async (req, res) => {
       throw new Error("카트가 비어있습니다.");
     }
 
-    return res.status(200).json({ status: "ok", data: cart.items });
+    return res
+      .status(200)
+      .json({ status: "ok", data: cart.items, cartItemQty: cart.items.length });
   } catch (err) {
     res.status(400).json({ status: "fail", error: err.message });
   }
@@ -102,7 +104,9 @@ cartController.deleteCartItem = async (req, res) => {
     cart.items.splice(index, 1);
     await cart.save();
 
-    return res.status(200).json({ status: "ok", data: cart.items });
+    return res
+      .status(200)
+      .json({ status: "ok", data: cart.items, cartItemQty: cart.items.length });
   } catch (err) {
     res.status(400).json({ status: "fail", error: err.message });
   }

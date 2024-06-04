@@ -1,6 +1,6 @@
 const Product = require("../models/Product");
 
-const PAGE_SIZE = 1;
+const PAGE_SIZE = 8;
 const productController = {};
 
 productController.createProduct = async (req, res) => {
@@ -39,7 +39,10 @@ productController.createProduct = async (req, res) => {
 productController.getProducts = async (req, res) => {
   try {
     const { page, name } = req.query;
-    const cond = name ? { name: { $regex: name, $options: "i" } } : {};
+    const cond = {
+      ...(name && { name: { $regex: name, $options: "i" } }),
+      isDeleted: false,
+    };
     let query = Product.find(cond);
     let response = { status: "ok" };
 
@@ -107,7 +110,13 @@ productController.deleteProduct = async (req, res) => {
   try {
     const productId = req.params.id;
 
-    const product = await Product.deleteOne({ _id: productId });
+    const product = await Product.findByIdAndUpdate(
+      { _id: productId },
+      {
+        isDeleted: true,
+      },
+      { new: true }
+    );
 
     return res.status(200).json({ status: "ok", data: product });
   } catch (err) {
@@ -151,6 +160,22 @@ productController.checkItemListStock = async (itemList) => {
   );
 
   return insufficientStockItems;
+};
+
+productController.getProductById = async (req, res) => {
+  try {
+    const productId = req.params.id;
+
+    const product = await Product.findById({ _id: productId });
+
+    if (!product) {
+      throw new Error("item doesn't exist");
+    }
+
+    return res.status(200).json({ status: "ok", data: product });
+  } catch (err) {
+    res.status(400).json({ status: "fail", error: err.message });
+  }
 };
 
 module.exports = productController;

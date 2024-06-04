@@ -1,7 +1,7 @@
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { oAuth2Client, OAuth2Client } = require("google-auth-library");
+const { OAuth2Client } = require("google-auth-library");
 require("dotenv").config;
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
@@ -99,12 +99,11 @@ authController.loginWithGoogle = async (req, res) => {
     if (!user) {
       // 유저를 새로 생성
       const randomPassword = "" + Math.floor(Math.random() * 100000000);
-      const salt = await bcrypt.getSalt(10);
+      const salt = await bcrypt.genSaltSync(10);
       const newPassword = await bcrypt.hash(randomPassword, salt);
       user = new User({ name, email, password: newPassword });
       await user.save();
     }
-
     //토큰을 발행하고 리턴
     const sessionToken = await user.generateToken();
 
