@@ -1,7 +1,7 @@
 {
   "name": "shop-back",
   "version": "1.0.0",
-  "description": "",
+  "description": "POSTMAN API Documentation\r https://documenter.getpostman.com/view/24388586/2sA3Qwc9yh",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -19,6 +19,8 @@
     "google-auth-library": "^9.10.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.4.0",
-    "nodemon": "^3.1.1"
-  }
+    "nodemon": "^3.1.1",
+    "openai": "^4.49.1"
+  },
+  "devDependencies": {}
 }
